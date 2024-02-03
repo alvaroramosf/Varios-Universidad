@@ -1,0 +1,18 @@
+
+CC=g++
+CPPFLAGS=-I. -g -std=c++11
+LDFLAGS=-pthread
+RM=rm -f
+
+all: main_p2_e2
+#--------------------------------------------------------
+# Compilacion
+practica_1_V1.o: main_p2_e2.cpp
+	${CC} -c main_p2_e2.cpp ${CPPFLAGS}
+#linkado
+practica_1_V1: main_p2_e2.o
+	${CC} main_p2_e2.o -o main_p2_e2 ${LDFLAGS}
+#--------------------------------------------------------
+clean:
+	${RM} main_p2_e2.o main_p2_e2
+
