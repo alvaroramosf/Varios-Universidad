@@ -23,7 +23,46 @@ public class ColeccionAnagramas {
 
 		// Verificar si las listas ordenadas son iguales
 		return (copy1.equals(copy2));
-}
+	}
+	
+	//Añade
+	
+	public static void agnadirPalabra(String palabra){
+		ArrayList<Character> palabraCaracteres = new ArrayList<>();
+		for (char c : palabra.toCharArray()) {//palabra -> array de letras
+			palabraCaracteres.add(c);
+		}
+		boolean anagramaEncontrado = false;
+		for (Anagrama anagrama : coleccion) {//Comparamos la palabra que hemos leido con todos los anagramas existentes, si existe lo añadimos y si no lo creamos
+			ArrayList<Character> palabraAnagrama = new ArrayList<>();
+			for (char c : anagrama.getPrimeraPalabra().toCharArray()) {
+				palabraAnagrama.add(c);
+			}
+			if (sonAnagramas(palabraAnagrama, palabraCaracteres)) {
+				anagrama.agnadirAnagrama(palabra);
+				anagramaEncontrado = true;
+				System.out.println("Palabra: " + palabra + " añadida al anagrama " + anagrama.getPrimeraPalabra());
+				break;
+			}
+		}
+		if (!anagramaEncontrado) {
+			coleccion.add(new Anagrama(palabra));
+		}
+	}
+	
+
+	//Muestra los anagramas por pantalla
+	public static void mostrarAnagramas(ArrayList<Anagrama> coleccion, int n){
+		for (Anagrama anagrama : coleccion) {//Mostrar por pantalla los anagramas con al menos n palabras
+				if(anagrama.getNumPalabras()> n){//Por ejemplo, anagramas de más de 2 palabras (si no no son anagramas)
+					System.out.println("Anagramas formados por las letras de  \"" + anagrama.getPrimeraPalabra() + "\" : ");
+					while(anagrama.existeSiguientePalabra()){
+						System.out.print(anagrama.getPalabra()+",");
+					}
+					System.out.println();
+				}
+		}
+	}
 
 	public static void main(String[] args) {
 		String filePath = "/usr/share/dict/spanish";
@@ -31,39 +70,10 @@ public class ColeccionAnagramas {
 			BufferedReader reader = new BufferedReader(new FileReader(filePath));
 			String palabraLeida;
 			while ((palabraLeida = reader.readLine()) != null) {//Leemos palabra
-				ArrayList<Character> palabraDiccionario = new ArrayList<>();
-				for (char c : palabraLeida.toCharArray()) {//palabra -> array de letras
-					palabraDiccionario.add(c);
-				}
-
-				boolean anagramaEncontrado = false;
-				for (Anagrama anagrama : coleccion) {//Comparamos la palabra que hemos leido con todos los anagramas existentes, si existe lo añadimos y si no lo creamos
-					ArrayList<Character> palabraAnagrama = new ArrayList<>();
-					for (char c : anagrama.getPrimeraPalabra().toCharArray()) {
-						palabraAnagrama.add(c);
-					}
-					if (sonAnagramas(palabraAnagrama, palabraDiccionario)) {
-						anagrama.agnadirAnagrama(palabraLeida);
-						anagramaEncontrado = true;
-						System.out.println("Palabra: " + palabraLeida + " añadida al anagrama " + anagrama.getPrimeraPalabra());
-						break;
-					}
-				}
-				if (!anagramaEncontrado) {
-					coleccion.add(new Anagrama(palabraLeida));
-				}
+				agnadirPalabra(palabraLeida);
 			}
 			reader.close();
-			for (Anagrama anagrama : coleccion) {//Mostrar por pantalla los anagramas con al menos n palabras
-				if(anagrama.getNumPalabras()> 2){//Por ejemplo, anagramas de más de 2 palabras (si no no son anagramas)
-					System.out.println("Anagramas formados por las letras de  \"" + anagrama.getPrimeraPalabra() + "\" : ");
-					while(anagrama.existeSiguientePalabra()){
-						System.out.print(anagrama.getPalabra()+",");
-					}
-					System.out.println();
-				}
-			}
-
+			mostrarAnagramas(coleccion, 2);
 		} catch (IOException e) {
 			System.err.println("Error al leer el archivo diccionario, puede ser que no exista en tu S.O.: " + e.getMessage());
 		}
