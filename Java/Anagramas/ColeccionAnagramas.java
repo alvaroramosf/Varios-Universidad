@@ -25,8 +25,7 @@ public class ColeccionAnagramas {
 		return (copy1.equals(copy2));
 	}
 	
-	//Añade
-	
+	//Añade la palabra a la coleción de anagramas
 	public static void agnadirPalabra(String palabra){
 		ArrayList<Character> palabraCaracteres = new ArrayList<>();
 		for (char c : palabra.toCharArray()) {//palabra -> array de letras
